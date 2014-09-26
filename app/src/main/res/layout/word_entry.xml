@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:paddingTop="30dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp" >
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_text"
+        android:textSize="40sp"
+        android:textColor="#990000"
+        android:typeface="serif"
+        android:textStyle="bold"
+        android:background="#00000000"
+        android:id="@+id/submitText"
+        android:singleLine="true"
+        android:imeOptions="actionSearch" />
+
+</LinearLayout>

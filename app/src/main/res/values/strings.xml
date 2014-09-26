@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lexplore</string>
+    <string name="action_settings">Settings</string>
+    <string name="info_text1">Lexplore is a meta-dictionary.\nIt shows definitions and synonyms from</string>
+    <string name="info_text2">Merriam-Webster\nUrban Dictionary\nWikisaurus</string>
+    <string name="hint_text">type a word</string>
+    <string name="app_version">v1.0</string>
+    <string name="about_contact">by Stephen Greenfield\nstephengreenfield@gmail.com\n<a href='http://mindsoon.com'>www.mindsoon.com</a></string>
+    <string name="about_info">Lexplore is a simple reference app. Type a word to get its dictionary definition, slang definition, and synonyms. Browse your search history with the back button or double-tap back to quit.</string>
+    <string name="about_button">about</string>
+    <string name="ok_button">OK</string>
+    <string name="tap_back">Tap BACK again to quit</string>
+    <string name="enable_internet">Please enable Internet access</string>
+    <string name="no_server_response">It\'s taking a long time to reach the server. Please try again.</string>
+    <string name="url">http://mindsoon.com/lexplore/api.php?q=</string>
+    <string name="line_tag"><Data><![CDATA[<small><br><br></small>]]></Data></string>
+    <string name="small_tag"><Data><![CDATA[<font color=\'#999999\'><small>]]></Data></string>
+    <string name="small_end_tag"><Data><![CDATA[</small></font> ]]></Data></string>
+    <string name="no_results_open_tag"><Data><![CDATA[<font color=\'#999999\'>no results at ]]></Data></string>
+    <string name="no_results_close_tag"><Data><![CDATA[</font>]]></Data></string>
+    <string name="wikisaurus_open_tag"><Data><![CDATA[<br><br>( </font><font color=\'#990000\'><a href=\'http://en.wiktionary.org/w/index.php?action=edit&title= ]]></Data></string>
+    <string name="wikisaurus_close_tag"><Data><![CDATA[\'>add synonyms</a></font><font color=\'#999999\'> )]]></Data></string>
+    <string name="urban_dictionary_open_tag"><Data><![CDATA[<br><br>( </font><font color=\'#990000\'><a href=\']]></Data></string>
+    <string name="urban_dictionary_close_tag"><Data><![CDATA[\'>add definition</a></font><font color=\'#999999\'> )]]></Data></string>
+    <string name="web_link_open_tag"><Data><![CDATA[<br><br>( <font color=\'#990000\'><a href=\']]></Data></string>
+    <string name="web_link_close_tag"><Data><![CDATA[\'>more</a></font> )]]></Data></string>
+</resources>

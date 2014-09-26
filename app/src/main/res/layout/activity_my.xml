@@ -1,0 +1,202 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyActivity"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/word_entry" />
+
+    <LinearLayout
+        android:id="@+id/progress_spinner_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <ProgressBar
+            android:id="@+id/progressSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/scroll_layout"
+        android:layout_weight=".7"
+        android:background="@drawable/frame_style" >
+
+        <LinearLayout
+            android:id="@+id/box_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:background="#666666"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:id="@+id/dictionary_name" />
+
+            <TextView
+                android:id="@+id/dictionary_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_style" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/filler_1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:background="#666666"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:id="@+id/slang_name" />
+
+            <TextView
+                android:id="@+id/slang_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_style" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/filler_2" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:background="#666666"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:id="@+id/thesaurus_name" />
+
+            <TextView
+                android:id="@+id/thesaurus_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_style" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/splash_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible"
+    android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/splash_text1"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="100dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:text="@string/info_text1" />
+
+        <TextView
+            android:id="@+id/splash_text2"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:textSize="14sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:gravity="center"
+            android:text="@string/info_text2"
+            android:onClick="showAbout" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="28dp"
+            android:text="@string/about_button"
+            android:textColor="#990000"
+            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:onClick="showAbout" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/about_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/about_head"
+            android:layout_width="fill_parent"
+            android:layout_height="105dp"
+            android:textSize="40sp"
+            android:paddingTop="40sp"
+            android:textColor="#990000"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/about_version"
+            android:layout_width="fill_parent"
+            android:layout_height="26dp"
+            android:paddingBottom="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/app_version" />
+
+        <TextView
+            android:id="@+id/about_contact"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/about_contact" />
+
+        <TextView
+            android:id="@+id/about_info"
+            android:layout_width="280dp"
+            android:layout_height="110dp"
+            android:paddingBottom="20dp"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/about_info" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="28dp"
+            android:text="@string/ok_button"
+            android:textColor="#990000"
+            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:onClick="showSplash" />
+
+    </LinearLayout>
+
+</LinearLayout>
