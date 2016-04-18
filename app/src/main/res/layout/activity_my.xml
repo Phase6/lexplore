@@ -10,19 +10,6 @@
         android:layout_height="wrap_content"
         layout="@layout/word_entry" />
 
-    <LinearLayout
-        android:id="@+id/progress_spinner_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone" >
-        <ProgressBar
-            android:id="@+id/progressSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -47,8 +34,19 @@
                 android:gravity="center"
                 android:id="@+id/dictionary_name" />
 
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/dictionary_spinner"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@drawable/box_style"
+                android:layout_width="match_parent"
+                android:layout_height="70dp" >
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+
             <TextView
-                android:id="@+id/dictionary_box"
+                android:id="@+id/dictionary_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/box_style" />
@@ -67,10 +65,21 @@
                 android:id="@+id/slang_name" />
 
             <TextView
-                android:id="@+id/slang_box"
+                android:id="@+id/slang_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/box_style" />
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/slang_spinner"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@drawable/box_style"
+                android:layout_width="match_parent"
+                android:layout_height="70dp" >
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -83,13 +92,25 @@
                 android:background="#666666"
                 android:textColor="#FFFFFF"
                 android:gravity="center"
-                android:id="@+id/thesaurus_name" />
+                android:id="@+id/synonym_name" />
 
             <TextView
-                android:id="@+id/thesaurus_box"
+                android:id="@+id/synonym_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/box_style" />
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/synonym_spinner"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@drawable/box_style"
+                android:layout_width="match_parent"
+                android:layout_height="70dp" >
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+
 
         </LinearLayout>
 
