@@ -24,4 +24,11 @@
     <string name="synonym_tag"><Data><![CDATA[<br><br>( </font><font color=\'#990000\'><a href=\'http://en.wiktionary.org/w/index.php?action=edit&title=%s\'>add synonyms</a></font><font color=\'#999999\'> )]]></Data></string>
     <string name="urban_dictionary_tag"><Data><![CDATA[<br><br>( </font><font color=\'#990000\'><a href=\'%s\'>add definition</a></font><font color=\'#999999\'> )]]></Data></string>
     <string name="web_link_tag"><Data><![CDATA[<br><br>( <font color=\'#990000\'><a href=\'%s\'>more</a></font> )]]></Data></string>
+
+
+
+
+    <string name="mw_dictionary_api_url">www.dictionary.com</string>
+    <string name="urban_dictionary_api_url">www.urbandictionary.com</string>
+    <string name="thesaurus_api_url">www.thesaurus.com</string>
 </resources>

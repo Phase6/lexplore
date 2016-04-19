@@ -5,6 +5,9 @@ package com.mindsoon.lexplore;
         import android.net.NetworkInfo;
         import android.os.AsyncTask;
         import android.os.Handler;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentManager;
+        import android.support.v4.app.FragmentTransaction;
         import android.support.v7.app.ActionBarActivity;
         import android.os.Bundle;
         import android.text.Html;
@@ -33,61 +36,177 @@ package com.mindsoon.lexplore;
         import java.net.SocketTimeoutException;
         import java.net.URLEncoder;
         import java.util.ArrayList;
+        import java.util.List;
 
-public class MyActivity extends ActionBarActivity implements OnClickListener {
-    private LinearLayout box_layout, splash_layout, about_layout;
-    private RelativeLayout dictionary_spinner, slang_spinner, synonym_spinner;
-    private TextView dictionary_name, slang_name, synonym_name, dictionary_textview, slang_textview, synonym_textview;
-    private EditText submitText;
-    private ScrollView scroll_layout;
-    private ArrayList<Entry> searchHistory = new ArrayList<Entry>();
-    private Entry entry;
+public class MyActivity extends ActionBarActivity implements OnClickListener, View.OnKeyListener {
+
+    FragmentManager fragmentManager;
+    LinearLayout fragmentContainer;
+    private static int CONTENT_VIEW_ID;
+
+    EditText submitText;
+    String currentWord;
+    ArrayList<String> searchHistory = new ArrayList<String>();
+
     private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
+        setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-        toastIfNoInternet();
-        setFields();
+
+        fragmentManager = getSupportFragmentManager();
+        fragmentContainer = (LinearLayout) findViewById(R.id.contentLayout);
+        CONTENT_VIEW_ID = fragmentContainer.getId();
+
+        submitText = (EditText) findViewById(R.id.submitText);
+
+
+        if(!isNetworkAvailable()){
+            toastUser(getString(R.string.enable_internet));
+        }
+
+        addSplashScreenFragment();
+
         submitText.setOnClickListener(this);
-        submitText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() != 0) {
-                    return false;
-                } else if (!isNetworkAvailable()) {
-                    toastIfNoInternet();
-                } else if (keyCode == KeyEvent.KEYCODE_BACK && searchHistory.size() > 1) {
-                    searchHistory.remove(searchHistory.size() - 1);
-                    submitText.setText(searchHistory.get(searchHistory.size() - 1).word);
-                    insertEntryIntoFields(searchHistory.get(searchHistory.size() - 1));
-                    hideKeyboard(v);
-                } else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU) {
-                    checkForDoubleBackPress();
-                    showSplash(v);
-                } else if (keyCode == KeyEvent.KEYCODE_ENTER && submitText.length() > 0) {
-                    entry = new Entry(submitText.getText().toString());
-                    if (!isWordValid(entry.word)) {
-                        showToast(getString(R.string.invalid_user_input_response));
-                        return true;
-                    }
-                    hideKeyboard(v);
-                    hydrateEntryContent(v, Entry.Verb.Dictionary);
-                    hydrateEntryContent(v, Entry.Verb.Slang);
-                    hydrateEntryContent(v, Entry.Verb.Synonym);
-                }
+        submitText.setOnKeyListener(this);
+
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() != 0) {
+            return false;
+        } else if (!isNetworkAvailable()) {
+            toastUser(getString(R.string.enable_internet));
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_ENTER && submitText.length() > 0) {
+            currentWord = submitText.getText().toString();
+            if (!isWordValid(currentWord)) {
+                toastUser(getString(R.string.invalid_user_input_response));
                 return true;
             }
-        });
+            hideKeyboard();
+            searchHistory.add(currentWord);
+            clearFragmentContainer();
+            getResultsForEntry(currentWord);
+
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        if(searchHistory.size() > 1){
+            searchHistory.remove(searchHistory.size() - 1);
+            submitText.setText(searchHistory.get(searchHistory.size() - 1));
+            clearFragmentContainer();
+            getResultsForEntry(searchHistory.get(searchHistory.size() - 1));
+            hideKeyboard();
+        }else if(searchHistory.size() == 1&& !doubleBackToExitPressedOnce){
+            this.doubleBackToExitPressedOnce = true;
+            toastUser(getString(R.string.tap_back));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }else{
+            super.onBackPressed();
+        }
+
+    }
+
+    public void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     boolean isWordValid(String word) {
         return !word.equals("");
     }
 
-    void hydrateEntryContent(final View v, final Entry.Verb verb){
+    public void onClick(View v) {
+        if (submitText.length() > 0) {
+            submitText.getText().clear();
+        }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void toastUser(String text){
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    public void clearFragmentContainer(){
+        List<Fragment> showingFragments = fragmentManager.getFragments();
+        if (showingFragments != null) {
+            for (Fragment frag : showingFragments){
+                getSupportFragmentManager().beginTransaction().remove(frag).commit();
+            }
+        }
+
+
+    }
+
+    public void addSplashScreenFragment(){
+        Fragment splashScreenFragment = new SplashScreenFragment();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(CONTENT_VIEW_ID, splashScreenFragment, "splashScreenFragment");
+        ft.commitAllowingStateLoss();
+    }
+
+    public void getResultsForEntry(String word){
+
+        //TODO: Change the names of the sources
+        //TODO: Add correct url for your API
+
+        String source1 = "MW Dictionary";
+        String api1 = getString(R.string.mw_dictionary_api_url);
+        addEntryResultFragment(source1, api1, word);
+
+        String source2 = "Urban Dictionary";
+        String api2 = getString(R.string.urban_dictionary_api_url);
+        addEntryResultFragment(source2, api2, word);
+
+        String source3 = "Thesaurus";
+        String api3 = getString(R.string.thesaurus_api_url);
+        addEntryResultFragment(source3, api3, word);
+
+    }
+
+
+    public void addEntryResultFragment(String source, String url, String word){
+
+        Fragment entryResultFragment = new EntryResultFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("source", source);
+        bundle.putString("url", url);
+        bundle.putString("word", word);
+        entryResultFragment.setArguments(bundle);
+
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(CONTENT_VIEW_ID, entryResultFragment, "entryResultFragment");
+        ft.commitAllowingStateLoss();
+    }
+
+
+
+    /*void hydrateEntryContent(final View v, final Entry.Verb verb){
 
         class HttpGetAsyncTask extends AsyncTask<String, Void, JSONObject> {
             @Override
@@ -147,31 +266,11 @@ public class MyActivity extends ActionBarActivity implements OnClickListener {
 
         HttpGetAsyncTask aTask = new HttpGetAsyncTask();
         aTask.execute(entry.word);
-    }
+    }*/
 
-    void showToast(final String toast) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(MyActivity.this, toast, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
-    void checkForDoubleBackPress() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        showToast(getString(R.string.tap_back));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000); }
 
-    void setFields() {
+    /*void setFields() {
         dictionary_name = (TextView) findViewById(R.id.dictionary_name);
         slang_name = (TextView) findViewById(R.id.slang_name);
         synonym_name = (TextView) findViewById(R.id.synonym_name);
@@ -195,9 +294,9 @@ public class MyActivity extends ActionBarActivity implements OnClickListener {
         synonym_textview.setLinksClickable(true);
         about_contact.setMovementMethod(LinkMovementMethod.getInstance());
         about_contact.setLinksClickable(true);
-    }
+    }*/
 
-    void insertEntryIntoFields(Entry entry) {
+    /*void insertEntryIntoFields(Entry entry) {
         if (entry.dictionary != null) {
             dictionary_name.setText(Html.fromHtml(entry.dictionary.name));
             dictionary_textview.setText(Html.fromHtml(entry.dictionary.content));
@@ -211,44 +310,27 @@ public class MyActivity extends ActionBarActivity implements OnClickListener {
             slang_textview.setText(Html.fromHtml(entry.slang.content));
         }
         scroll_layout.scrollTo(0, 0);
-    }
+    }*/
 
-    public void onClick(View v) {
-        if (submitText.length() > 0) {
-            submitText.getText().clear();
-        }
-    }
 
-    void toastIfNoInternet() {
-        if (!isNetworkAvailable()) {
-            showToast(getString(R.string.enable_internet));
-        }
-    }
 
-    boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    void hideKeyboard(View v) {
+    /*void hideKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
+    }*/
 
-    public void hideAllWidgets(boolean hideBox){
+    /*public void hideAllWidgets(boolean hideBox){
         box_layout.setVisibility(hideBox ? View.GONE : View.VISIBLE);
         about_layout.setVisibility(View.GONE);
         splash_layout.setVisibility(View.GONE);
-    }
+    }*/
 
-    public void showAbout(View v) {
+    /*public void showAbout(View v) {
         hideAllWidgets(true);
         about_layout.setVisibility(View.VISIBLE);
-    }
+    }*/
 
-    void showSpinner(Entry.Verb verb) {
+    /*void showSpinner(Entry.Verb verb) {
         hideAllWidgets(false);
         if (verb == Entry.Verb.Dictionary) {
             dictionary_spinner.setVisibility(View.VISIBLE);
@@ -260,9 +342,9 @@ public class MyActivity extends ActionBarActivity implements OnClickListener {
             synonym_spinner.setVisibility(View.VISIBLE);
             synonym_textview.setVisibility(View.GONE);
         }
-    }
+    }*/
 
-    void hideSpinner(Entry.Verb verb) {
+    /*void hideSpinner(Entry.Verb verb) {
         if (verb == Entry.Verb.Dictionary) {
             dictionary_spinner.setVisibility(View.GONE);
             dictionary_textview.setVisibility(View.VISIBLE);
@@ -273,10 +355,12 @@ public class MyActivity extends ActionBarActivity implements OnClickListener {
             synonym_spinner.setVisibility(View.GONE);
             synonym_textview.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
-    public void showSplash(View v) {
+    /*public void showSplash(View v) {
         hideAllWidgets(true);
         splash_layout.setVisibility(View.VISIBLE);
-    }
+    }*/
+
+
 }
